@@ -1,52 +1,64 @@
-const csv = `Time,Temperature
-2020-02-15 18:37:39,-8.25
-2020-02-15 19:07:39,-8.08
-2020-02-15 19:37:39,-8.41
-2020-02-15 20:07:39,-8.2`;
 
-const csvToChartData = csv => {
-  const lines = csv.trim().split('\n');
-  lines.shift(); // remove titles (first line)
-  return lines.map(line => {
-    const [date, temperature] = line.split(',');
-    return {
-      x: date,
-      y: temperature
+<head>
+<style>
+  #wrapper {
+    height: 1000px;
+  }
+
+
+</style>
+
+</head><div id="wrapper">
+  <canvas id="chart"></canvas>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
+
+
+<script>
+function makeChart(players) {
+  // players is an array of objects where each object is something like:
+  // {
+  //   "Name": "Steffi Graf",
+  //   "Weeks": "377",
+  //   "Gender": "Female"
+  // }
+
+  var playerLabels = players.map(function(d) {
+    return Date(d.dt);
+  });
+  var weeksData = players.map(function(d) {
+    return +d.kw;
+  });
+  var playerColors = '#19A0AA';
+
+  var chart = new Chart('chart', {
+    type: "line",
+    options: {
+      maintainAspectRatio: false,
+      legend: {
+        display: false
+      }
+    },
+    data: {
+      labels: playerLabels,
+      datasets: [
+        {
+          data: weeksData,
+          backgroundColor: playerColors
+        }
+      ]
     }
   });
-};
+}
 
-const ctx = document.querySelector("#line-chart").getContext('2d');
-const config = {
-  type: 'line',
-  data: {
-    labels: [],
-    datasets: [{
-      data: csvToChartData(csv),
-      label: "Temperature",
-      borderColor: "#3e95cd",
-      fill: false
-    }]
-  },
-  options: {
-    scales: {
-      xAxes: [{
-        type: 'time',
-        distribution: 'linear',
-      }],
-      title: {
-        display: false,
-      }
-    }
-  }
-};
-new Chart(ctx, config);
+// Request data using D3
+d3
+  .csv("https://raw.githubusercontent.com/wyeates/solardash/master/generation.csv")
+  .then(makeChart);
 
-#line-chart {
-    display: block;
-    width: 100%;
-  }
 
-  <canvas id="line-chart"></canvas>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+</script>
+
+
