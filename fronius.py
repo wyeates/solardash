@@ -39,7 +39,7 @@ data = cur.execute("select dt, kw from generation where DATE(dt) =  DATE('now','
 
 with open('generation.csv', 'w', newline='') as f:
     writer = csv.writer(f)
-    writer.writerow(['dt', 'dw'])
+    writer.writerow(['dt', 'kw'])
     writer.writerows(data)
 
 
