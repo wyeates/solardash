@@ -1,0 +1,52 @@
+const csv = `Time,Temperature
+2020-02-15 18:37:39,-8.25
+2020-02-15 19:07:39,-8.08
+2020-02-15 19:37:39,-8.41
+2020-02-15 20:07:39,-8.2`;
+
+const csvToChartData = csv => {
+  const lines = csv.trim().split('\n');
+  lines.shift(); // remove titles (first line)
+  return lines.map(line => {
+    const [date, temperature] = line.split(',');
+    return {
+      x: date,
+      y: temperature
+    }
+  });
+};
+
+const ctx = document.querySelector("#line-chart").getContext('2d');
+const config = {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: [{
+      data: csvToChartData(csv),
+      label: "Temperature",
+      borderColor: "#3e95cd",
+      fill: false
+    }]
+  },
+  options: {
+    scales: {
+      xAxes: [{
+        type: 'time',
+        distribution: 'linear',
+      }],
+      title: {
+        display: false,
+      }
+    }
+  }
+};
+new Chart(ctx, config);
+
+#line-chart {
+    display: block;
+    width: 100%;
+  }
+
+  <canvas id="line-chart"></canvas>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
