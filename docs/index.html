@@ -50,7 +50,7 @@ function makeChart(players) {
 
 // Request data using D3
 d3
-  .csv("https://cb-generation.s3.ap-southeast-2.amazonaws.com/generation.csv")
+  .csv("https://raw.githubusercontent.com/wyeates/solardash/master/generation.csv")
   .then(makeChart);
 
 
